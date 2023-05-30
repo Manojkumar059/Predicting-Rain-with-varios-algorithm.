@@ -1,0 +1,1752 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "<h2>Table of Contents</h2>\n",
+    "<div class=\"alert alert-block alert-info\" style=\"margin-top: 20px\">\n",
+    "    <ul>\n",
+    "    <li><a href=\"https://#Section_1\">Instructions</a></li>\n",
+    "    <li><a href=\"https://#Section_2\">About the Data</a></li>\n",
+    "    <li><a href=\"https://#Section_3\">Importing Data </a></li>\n",
+    "    <li><a href=\"https://#Section_4\">Data Preprocessing</a> </li>\n",
+    "    <li><a href=\"https://#Section_5\">Transforming Categorical Variables </a></li>\n",
+    "    <li><a href=\"https://#Section_6\">Train and Test Data Split </a></li>\n",
+    "    <li><a href=\"https://#Section_7\">Train Linear Regression, KNN, Decision Tree, Logistic Regression, and SVM models and return their appropriate accuracy scores</a></li>\n",
+    "</a></li>\n",
+    "</div>\n",
+    "<p>Estimated Time Needed: <strong>180 min</strong></p>\n",
+    "</div>\n",
+    "\n",
+    "<hr>\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Instructions\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "In this notebook, you will  practice all the classification algorithms that we learned in this course.\n",
+    "\n",
+    "After completing this notebook, you will need to upload it to the \"Submit Your Work and Review Your Peers\" section of the Final Project module.\n",
+    "\n",
+    "Below, is where we are going to use the classification algorithms to create a model based on our training data and evaluate our testing data using evaluation metrics learned in the course.\n",
+    "\n",
+    "We will use some of the algorithms taught in the course, specifically:\n",
+    "\n",
+    "1.  Linear Regression\n",
+    "2.  KNN\n",
+    "3.  Decision Trees\n",
+    "4.  Logistic Regression\n",
+    "5.  SVM\n",
+    "\n",
+    "We will evaluate our models using:\n",
+    "\n",
+    "1.  Accuracy Score\n",
+    "2.  Jaccard Index\n",
+    "3.  F1-Score\n",
+    "4.  LogLoss\n",
+    "5.  Mean Absolute Error\n",
+    "6.  Mean Squared Error\n",
+    "7.  R2-Score\n",
+    "\n",
+    "Finally, you will use your models to generate the report displaying the accuracy scores.\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# About The Dataset\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "This dataset contains observations of weather metrics for each day from 2008 to 2017. The **weatherAUS.csv** dataset includes the following fields:\n",
+    "\n",
+    "| Field         | Description                                           | Unit            | Type   |\n",
+    "| ------------- | ----------------------------------------------------- | --------------- | ------ |\n",
+    "| Date          | Date of the Observation in YYYY-MM-DD                 | Date            | object |\n",
+    "| Location      | Location of the Observation                           | Location        | object |\n",
+    "| MinTemp       | Minimum temperature                                   | Celsius         | float  |\n",
+    "| MaxTemp       | Maximum temperature                                   | Celsius         | float  |\n",
+    "| Rainfall      | Amount of rainfall                                    | Millimeters     | float  |\n",
+    "| Evaporation   | Amount of evaporation                                 | Millimeters     | float  |\n",
+    "| Sunshine      | Amount of bright sunshine                             | hours           | float  |\n",
+    "| WindGustDir   | Direction of the strongest gust                       | Compass Points  | object |\n",
+    "| WindGustSpeed | Speed of the strongest gust                           | Kilometers/Hour | object |\n",
+    "| WindDir9am    | Wind direction averaged of 10 minutes prior to 9am    | Compass Points  | object |\n",
+    "| WindDir3pm    | Wind direction averaged of 10 minutes prior to 3pm    | Compass Points  | object |\n",
+    "| WindSpeed9am  | Wind speed averaged of 10 minutes prior to 9am        | Kilometers/Hour | float  |\n",
+    "| WindSpeed3pm  | Wind speed averaged of 10 minutes prior to 3pm        | Kilometers/Hour | float  |\n",
+    "| Humidity9am   | Humidity at 9am                                       | Percent         | float  |\n",
+    "| Humidity3pm   | Humidity at 3pm                                       | Percent         | float  |\n",
+    "| Pressure9am   | Atmospheric pressure reduced to mean sea level at 9am | Hectopascal     | float  |\n",
+    "| Pressure3pm   | Atmospheric pressure reduced to mean sea level at 3pm | Hectopascal     | float  |\n",
+    "| Cloud9am      | Fraction of the sky obscured by cloud at 9am          | Eights          | float  |\n",
+    "| Cloud3pm      | Fraction of the sky obscured by cloud at 3pm          | Eights          | float  |\n",
+    "| Temp9am       | Temperature at 9am                                    | Celsius         | float  |\n",
+    "| Temp3pm       | Temperature at 3pm                                    | Celsius         | float  |\n",
+    "| RainToday     | If there was rain today                               | Yes/No          | object |\n",
+    "| RISK_MM       | Amount of rain tomorrow                               | Millimeters     | float  |\n",
+    "| RainTomorrow  | If there is rain tomorrow                             | Yes/No          | float  |\n",
+    "\n",
+    "Column definitions were gathered from [http://www.bom.gov.au/climate/dwo/IDCJDW0000.shtml](http://www.bom.gov.au/climate/dwo/IDCJDW0000.shtml?utm_medium=Exinfluencer&utm_source=Exinfluencer&utm_content=000026UJ&utm_term=10006555&utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDeveloperSkillsNetworkML0101ENSkillsNetwork20718538-2022-01-01)\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## **Import the required libraries**\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# All Libraries required for this lab are listed below. The libraries pre-installed on Skills Network Labs are commented.\n",
+    "# !mamba install -qy pandas==1.3.4 numpy==1.21.4 seaborn==0.9.0 matplotlib==3.5.0 scikit-learn==0.20.1\n",
+    "# Note: If your environment doesn't support \"!mamba install\", use \"!pip install\""
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Surpress warnings:\n",
+    "def warn(*args, **kwargs):\n",
+    "    pass\n",
+    "import warnings\n",
+    "warnings.warn = warn"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import pandas as pd\n",
+    "from sklearn.linear_model import LogisticRegression\n",
+    "from sklearn.linear_model import LinearRegression\n",
+    "from sklearn import preprocessing\n",
+    "import numpy as np\n",
+    "from sklearn.neighbors import KNeighborsClassifier\n",
+    "from sklearn.model_selection import GridSearchCV\n",
+    "from sklearn.model_selection import train_test_split\n",
+    "from sklearn.neighbors import KNeighborsClassifier\n",
+    "from sklearn.tree import DecisionTreeClassifier\n",
+    "from sklearn import svm\n",
+    "from sklearn.metrics import jaccard_score\n",
+    "from sklearn.metrics import f1_score\n",
+    "from sklearn.metrics import log_loss\n",
+    "import matplotlib.pyplot as plt\n",
+    "from sklearn.metrics import confusion_matrix, accuracy_score\n",
+    "import sklearn.metrics as metrics"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Importing the Dataset\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>Date</th>\n",
+       "      <th>MinTemp</th>\n",
+       "      <th>MaxTemp</th>\n",
+       "      <th>Rainfall</th>\n",
+       "      <th>Evaporation</th>\n",
+       "      <th>Sunshine</th>\n",
+       "      <th>WindGustDir</th>\n",
+       "      <th>WindGustSpeed</th>\n",
+       "      <th>WindDir9am</th>\n",
+       "      <th>WindDir3pm</th>\n",
+       "      <th>...</th>\n",
+       "      <th>Humidity9am</th>\n",
+       "      <th>Humidity3pm</th>\n",
+       "      <th>Pressure9am</th>\n",
+       "      <th>Pressure3pm</th>\n",
+       "      <th>Cloud9am</th>\n",
+       "      <th>Cloud3pm</th>\n",
+       "      <th>Temp9am</th>\n",
+       "      <th>Temp3pm</th>\n",
+       "      <th>RainToday</th>\n",
+       "      <th>RainTomorrow</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>2/1/2008</td>\n",
+       "      <td>19.5</td>\n",
+       "      <td>22.4</td>\n",
+       "      <td>15.6</td>\n",
+       "      <td>6.2</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>W</td>\n",
+       "      <td>41</td>\n",
+       "      <td>S</td>\n",
+       "      <td>SSW</td>\n",
+       "      <td>...</td>\n",
+       "      <td>92</td>\n",
+       "      <td>84</td>\n",
+       "      <td>1017.6</td>\n",
+       "      <td>1017.4</td>\n",
+       "      <td>8</td>\n",
+       "      <td>8</td>\n",
+       "      <td>20.7</td>\n",
+       "      <td>20.9</td>\n",
+       "      <td>Yes</td>\n",
+       "      <td>Yes</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>2/2/2008</td>\n",
+       "      <td>19.5</td>\n",
+       "      <td>25.6</td>\n",
+       "      <td>6.0</td>\n",
+       "      <td>3.4</td>\n",
+       "      <td>2.7</td>\n",
+       "      <td>W</td>\n",
+       "      <td>41</td>\n",
+       "      <td>W</td>\n",
+       "      <td>E</td>\n",
+       "      <td>...</td>\n",
+       "      <td>83</td>\n",
+       "      <td>73</td>\n",
+       "      <td>1017.9</td>\n",
+       "      <td>1016.4</td>\n",
+       "      <td>7</td>\n",
+       "      <td>7</td>\n",
+       "      <td>22.4</td>\n",
+       "      <td>24.8</td>\n",
+       "      <td>Yes</td>\n",
+       "      <td>Yes</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>2/3/2008</td>\n",
+       "      <td>21.6</td>\n",
+       "      <td>24.5</td>\n",
+       "      <td>6.6</td>\n",
+       "      <td>2.4</td>\n",
+       "      <td>0.1</td>\n",
+       "      <td>W</td>\n",
+       "      <td>41</td>\n",
+       "      <td>ESE</td>\n",
+       "      <td>ESE</td>\n",
+       "      <td>...</td>\n",
+       "      <td>88</td>\n",
+       "      <td>86</td>\n",
+       "      <td>1016.7</td>\n",
+       "      <td>1015.6</td>\n",
+       "      <td>7</td>\n",
+       "      <td>8</td>\n",
+       "      <td>23.5</td>\n",
+       "      <td>23.0</td>\n",
+       "      <td>Yes</td>\n",
+       "      <td>Yes</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>2/4/2008</td>\n",
+       "      <td>20.2</td>\n",
+       "      <td>22.8</td>\n",
+       "      <td>18.8</td>\n",
+       "      <td>2.2</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>W</td>\n",
+       "      <td>41</td>\n",
+       "      <td>NNE</td>\n",
+       "      <td>E</td>\n",
+       "      <td>...</td>\n",
+       "      <td>83</td>\n",
+       "      <td>90</td>\n",
+       "      <td>1014.2</td>\n",
+       "      <td>1011.8</td>\n",
+       "      <td>8</td>\n",
+       "      <td>8</td>\n",
+       "      <td>21.4</td>\n",
+       "      <td>20.9</td>\n",
+       "      <td>Yes</td>\n",
+       "      <td>Yes</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>2/5/2008</td>\n",
+       "      <td>19.7</td>\n",
+       "      <td>25.7</td>\n",
+       "      <td>77.4</td>\n",
+       "      <td>4.8</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>W</td>\n",
+       "      <td>41</td>\n",
+       "      <td>NNE</td>\n",
+       "      <td>W</td>\n",
+       "      <td>...</td>\n",
+       "      <td>88</td>\n",
+       "      <td>74</td>\n",
+       "      <td>1008.3</td>\n",
+       "      <td>1004.8</td>\n",
+       "      <td>8</td>\n",
+       "      <td>8</td>\n",
+       "      <td>22.5</td>\n",
+       "      <td>25.5</td>\n",
+       "      <td>Yes</td>\n",
+       "      <td>Yes</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "<p>5 rows × 22 columns</p>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "       Date  MinTemp  MaxTemp  Rainfall  Evaporation  Sunshine WindGustDir  \\\n",
+       "0  2/1/2008     19.5     22.4      15.6          6.2       0.0           W   \n",
+       "1  2/2/2008     19.5     25.6       6.0          3.4       2.7           W   \n",
+       "2  2/3/2008     21.6     24.5       6.6          2.4       0.1           W   \n",
+       "3  2/4/2008     20.2     22.8      18.8          2.2       0.0           W   \n",
+       "4  2/5/2008     19.7     25.7      77.4          4.8       0.0           W   \n",
+       "\n",
+       "   WindGustSpeed WindDir9am WindDir3pm  ...  Humidity9am  Humidity3pm  \\\n",
+       "0             41          S        SSW  ...           92           84   \n",
+       "1             41          W          E  ...           83           73   \n",
+       "2             41        ESE        ESE  ...           88           86   \n",
+       "3             41        NNE          E  ...           83           90   \n",
+       "4             41        NNE          W  ...           88           74   \n",
+       "\n",
+       "   Pressure9am  Pressure3pm  Cloud9am  Cloud3pm  Temp9am  Temp3pm  RainToday  \\\n",
+       "0       1017.6       1017.4         8         8     20.7     20.9        Yes   \n",
+       "1       1017.9       1016.4         7         7     22.4     24.8        Yes   \n",
+       "2       1016.7       1015.6         7         8     23.5     23.0        Yes   \n",
+       "3       1014.2       1011.8         8         8     21.4     20.9        Yes   \n",
+       "4       1008.3       1004.8         8         8     22.5     25.5        Yes   \n",
+       "\n",
+       "   RainTomorrow  \n",
+       "0           Yes  \n",
+       "1           Yes  \n",
+       "2           Yes  \n",
+       "3           Yes  \n",
+       "4           Yes  \n",
+       "\n",
+       "[5 rows x 22 columns]"
+      ]
+     },
+     "execution_count": 2,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df = pd.read_csv(r\"C:\\Users\\Manoj Kumar\\Downloads\\Weather_Data.csv\")\n",
+    "\n",
+    "df.head()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Data Preprocessing\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "#### Transforming Categorical Variables\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "First, we need to convert categorical variables to binary variables. We will use pandas `get_dummies()` method for this.\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "df_sydney_processed = pd.get_dummies(data=df, columns=['RainToday', 'WindGustDir', 'WindDir9am', 'WindDir3pm'])"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Next, we replace the values of the 'RainTomorrow' column changing them from a categorical column to a binary column. We do not use the `get_dummies` method because we would end up with two columns for 'RainTomorrow' and we do not want, since 'RainTomorrow' is our target.\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "df_sydney_processed.replace(['No', 'Yes'], [0,1], inplace=True)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Training Data and Test Data\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Now, we set our 'features' or x values and our Y or target variable.\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "df_sydney_processed.drop('Date',axis=1,inplace=True)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "df_sydney_processed = df_sydney_processed.astype(float)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "features = df_sydney_processed.drop(columns='RainTomorrow', axis=1)\n",
+    "Y = df_sydney_processed['RainTomorrow']"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Linear Regression\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "#### Q1) Use the `train_test_split` function to split the `features` and `Y` dataframes with a `test_size` of `0.2` and the `random_state` set to `10`.\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 10,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "\n",
+    "X = df_sydney_processed.drop(['RainTomorrow'],axis=1)\n",
+    "from sklearn.preprocessing import StandardScaler\n",
+    "X = StandardScaler().fit_transform(X)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 12,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "x_train, x_test, y_train, y_test = train_test_split(X,Y,test_size=0.2, random_state=10)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "#### Q2) Create and train a Linear Regression model called LinearReg using the training data (`x_train`, `y_train`).\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 14,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "\n",
+    "from sklearn.linear_model import LinearRegression\n",
+    "    \n",
+    "    \n",
+    "    "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 16,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "LinearRegression()"
+      ]
+     },
+     "execution_count": 16,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "LinearReg = LinearRegression()\n",
+    "LinearReg.fit(x_train, y_train)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "#### Q3) Now use the `predict` method on the testing data (`x_test`) and save it to the array `predictions`.\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 17,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 20,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "array([ 1.31903791e-01,  2.76129866e-01,  9.77149153e-01,  2.86994123e-01,\n",
+       "        1.32086897e-01,  4.60486555e-01,  3.56604719e-01,  8.55704450e-01,\n",
+       "        6.75269270e-01,  3.86191843e-02,  4.50816140e-03,  2.81088972e-01,\n",
+       "        3.38904524e-01,  7.76435374e-02,  6.21711253e-02,  5.64398908e-01,\n",
+       "       -6.17607595e-02,  5.25153303e-01,  1.53815412e-01,  3.59320783e-01,\n",
+       "        6.07673167e-02,  9.04914045e-01,  4.67566633e-01,  2.03009748e-01,\n",
+       "       -7.08549978e-02,  3.83521223e-01,  5.36017561e-01, -2.32475759e-02,\n",
+       "        6.39960432e-01, -9.59404470e-02,  3.77539778e-01,  1.21016645e-01,\n",
+       "       -1.80290700e-02,  5.53809641e-02,  5.62689924e-01,  1.06308665e+00,\n",
+       "       -6.70704856e-03,  5.14655256e-01, -8.89824392e-02,  6.89765452e-02,\n",
+       "        2.42072581e-02,  8.71771955e-01,  2.45185041e-01,  3.94644880e-01,\n",
+       "        2.67439985e-01,  4.46845198e-01, -4.77150442e-02,  1.89063215e-01,\n",
+       "        7.76068830e-01,  1.57950544e-01,  4.00462136e-03, -5.16594411e-02,\n",
+       "        2.06458235e-01, -2.07833147e-01, -7.66380788e-02,  2.49488020e-01,\n",
+       "        2.79425764e-01,  6.03461408e-01,  6.28913069e-01,  4.90729475e-01,\n",
+       "        5.65558909e-02,  1.06085920e-01,  6.69150495e-01,  7.64197492e-01,\n",
+       "        9.79987620e-02, -6.30424978e-02,  4.13123274e-01,  7.24708079e-02,\n",
+       "        2.49457502e-01,  2.56384992e-01,  3.78791331e-02, -6.86577322e-02,\n",
+       "        3.48212385e-01,  1.73346662e-01,  4.15076399e-01, -7.22588064e-02,\n",
+       "        3.40338850e-01,  1.86652326e-01, -1.54702044e-01,  7.99750471e-01,\n",
+       "        2.32001448e-01,  2.36487532e-01,  2.56140852e-01,  1.03369856e-01,\n",
+       "        6.21527815e-01,  1.29431867e-01,  3.71237898e-01,  4.82611799e-01,\n",
+       "        3.07868147e-01,  1.19307661e-01,  5.48774241e-02,  1.11060285e-01,\n",
+       "       -1.62957049e-01, -1.58043718e-01,  7.26691721e-02,  7.76679182e-01,\n",
+       "        8.47236155e-02,  6.43012190e-01,  1.21131086e-01,  1.77710676e-01,\n",
+       "        3.03473616e-01,  1.84271955e-01,  1.13251414e+00,  3.43726301e-01,\n",
+       "        8.27429914e-01,  5.38520002e-01,  2.73688459e-01,  6.30072737e-01,\n",
+       "       -6.81007864e-02,  9.65277815e-01,  5.61103010e-01,  2.33375071e-02,\n",
+       "        1.05475569e-01,  9.37568186e-02,  8.10615061e-02,  2.92243147e-01,\n",
+       "        5.54877424e-01,  6.66572093e-02,  4.24872874e-02,  1.20463357e-03,\n",
+       "        1.37534284e-01, -2.18071795e-01,  7.00751780e-02,  1.19666242e-01,\n",
+       "        1.92382002e-01, -3.85063650e-02,  1.55768537e-01,  7.11676741e-01,\n",
+       "        2.62580061e-01,  5.34720564e-01,  3.97223616e-01, -4.68986990e-02,\n",
+       "        2.43506574e-01,  2.06030989e-01,  2.80249739e-01, -1.27983904e-01,\n",
+       "        1.19116926e-01,  3.83612776e-01,  1.83493757e-01,  7.29193830e-01,\n",
+       "        3.31534529e-01, -1.03157854e-01,  2.39051008e-01,  3.04938459e-01,\n",
+       "        6.63642073e-01,  2.18039988e-02,  1.60132551e-01,  5.21216535e-01,\n",
+       "       -4.41292287e-02,  7.97660017e-01,  2.21793318e-01,  3.89624739e-01,\n",
+       "       -5.64201833e-02,  4.01190901e-01,  2.34320783e-01,  1.19940901e-01,\n",
+       "        3.05319929e-01,  7.85437727e-01,  3.29658030e-02,  1.22583690e+00,\n",
+       "        8.94599104e-01,  8.17328928e-02, -1.54045583e-02,  1.70645857e-01,\n",
+       "       -6.98631765e-02, -1.07842302e-01, -5.11940481e-02,  2.97873640e-01,\n",
+       "        3.56772566e-01,  9.55878733e-02,  8.85382795e-01, -3.29521657e-02,\n",
+       "        5.99433088e-01,  8.94080637e-02,  9.79377268e-02,  3.54376936e-01,\n",
+       "        2.36014509e-01, -6.73454763e-02,  1.44263410e-01,  4.18341780e-01,\n",
+       "        5.87958479e-01,  2.16864729e-01, -3.29216482e-02,  1.00585093e+00,\n",
+       "        4.32807444e-02, -1.68999197e-02,  2.48297834e-01, -5.94109060e-02,\n",
+       "        2.21892500e-01, -7.14348318e-02,  8.50287913e-02,  7.15781687e-02,\n",
+       "        3.48578928e-02,  4.42923689e-01,  1.86896467e-01,  1.82868147e-01,\n",
+       "        7.53852366e-02,  1.33124827e-02,  1.83692121e-01,  2.32916975e-01,\n",
+       "        5.29181623e-01,  1.59949446e-01,  3.94782209e-01, -4.50676443e-02,\n",
+       "        8.39362287e-01,  1.65473460e-02, -1.73882009e-02, -2.17979909e-02,\n",
+       "        1.46598005e-01,  1.37793684e-01, -3.41728689e-02,  4.14862776e-01,\n",
+       "        6.56378889e-01, -5.65419212e-03,  2.87467478e-02,  4.63019846e-02,\n",
+       "       -7.18315603e-02,  2.72620344e-01,  5.29120588e-01, -5.88921072e-02,\n",
+       "        8.41742658e-01,  3.25690412e-01,  3.18686628e-01,  3.60023020e-02,\n",
+       "       -8.51219656e-02,  2.82889509e-01,  3.01276350e-01,  1.36572981e-01,\n",
+       "        3.35608625e-01,  4.11872053e-01,  3.75311994e-01,  1.24274397e-01,\n",
+       "        2.88336897e-01,  9.06409407e-01,  4.44541120e-01,  2.74512434e-01,\n",
+       "       -6.61549583e-03,  6.91657209e-01,  6.71576643e-01,  1.15149641e-01,\n",
+       "        7.74474287e-01,  9.95551252e-01,  5.87103987e-01,  3.13178205e-01,\n",
+       "        2.26271772e-01, -4.54414846e-02,  2.26203108e-01,  2.30322981e-01,\n",
+       "        3.55277204e-01, -1.26641131e-01,  3.47510813e-02,  1.82440901e-01,\n",
+       "        2.15659284e-01,  1.76734114e-01, -2.99614431e-02,  1.00022044e+00,\n",
+       "        1.87140608e-01,  7.50922346e-01,  6.20612287e-01,  7.18024397e-01,\n",
+       "        3.15711164e-01,  2.25287913e-02,  3.26117658e-01, -7.50050559e-03,\n",
+       "        2.82485151e-01, -2.30797292e-02,  8.01917551e-02, -3.44166770e-03,\n",
+       "        3.57001448e-01,  1.36328840e-01,  2.66272688e-01,  1.45331858e-02,\n",
+       "        2.20801496e-01,  7.07282209e-01,  1.59278059e-01,  2.05176496e-01,\n",
+       "        5.38123274e-01, -1.52352190e-01,  2.54584455e-01,  2.75702619e-01,\n",
+       "        2.64350080e-01,  6.73591135e-02,  9.74494123e-01,  1.99469709e-01,\n",
+       "        7.56384992e-01, -3.50578786e-02,  4.88394880e-01,  5.60679421e-03,\n",
+       "       -7.24724294e-02,  3.05480146e-01, -2.06047869e-01,  1.90955305e-01,\n",
+       "       -2.49565603e-02, -7.69279958e-02,  2.79730940e-01,  7.87726878e-02,\n",
+       "        2.34015608e-01,  4.44770002e-01,  6.63825510e-02, -3.35014822e-02,\n",
+       "        5.82701826e-01,  5.80512522e-02,  3.20441389e-01,  7.24463606e-01,\n",
+       "        1.34986067e-01, -2.27592947e-02,  7.32245588e-01, -3.08586931e-01,\n",
+       "        1.09073558e+00,  2.85773420e-01,  8.85184431e-01,  6.96204328e-01,\n",
+       "        5.84540510e-01, -2.20573904e-02,  9.50965071e-01,  7.15064192e-01,\n",
+       "        4.48508406e-01,  5.80756330e-01,  1.86865949e-01,  2.29338789e-01,\n",
+       "       -5.78239919e-02,  3.15489912e-01,  8.74411726e-01, -1.63200857e-02,\n",
+       "        2.52158308e-01, -3.33183767e-02, -4.41521169e-02,  4.08545969e-02,\n",
+       "        2.35663557e-01,  2.03055525e-01,  8.81690168e-01,  5.86371565e-01,\n",
+       "        1.19849348e-01, -2.08366872e-02, -1.86699392e-02,  1.03156233e-01,\n",
+       "        8.38389382e-03,  2.28491926e-01, -1.76933767e-02,  7.19520091e-02,\n",
+       "        1.62573957e-01,  1.70004988e-01,  2.46375227e-01,  1.47864485e-01,\n",
+       "        3.91547346e-01, -6.63078786e-02,  1.16034651e-01,  1.83020735e-01,\n",
+       "        9.04609202e-02, -1.83113576e-02,  2.08533430e-01, -1.32072927e-02,\n",
+       "        5.45813703e-01,  4.16236067e-01,  1.77970075e-01,  1.74323557e-02,\n",
+       "        4.94269514e-01,  1.46857405e-01,  5.24291181e-01,  5.97479963e-01,\n",
+       "        3.07654524e-01,  3.09210920e-01,  4.46112776e-01,  1.68128157e-01,\n",
+       "        2.60916853e-01,  7.56079817e-01,  4.06195783e-01,  4.90180158e-01,\n",
+       "        5.13861799e-01, -1.30333758e-01,  7.93525218e-02,  3.50608015e-01,\n",
+       "        1.00540843e+00,  2.74481916e-01,  6.35687971e-01,  5.78353071e-01,\n",
+       "        4.68268537e-01,  3.95884499e-03,  3.58832502e-01,  6.71760081e-02,\n",
+       "       -4.27025320e-02,  7.03620100e-01,  1.27478742e-01,  7.99658918e-01,\n",
+       "        4.69947004e-01, -1.76476003e-02,  2.82355784e-02,  5.55365705e-01,\n",
+       "        4.94452952e-02,  1.14691877e-01, -9.46888938e-03,  1.46857405e-01,\n",
+       "        4.70923567e-01, -9.22783376e-02,  8.08173655e-02,  3.07075022e-02,\n",
+       "        3.94538069e-01,  2.23685407e-01,  1.00348582e+00,  7.07739973e-01,\n",
+       "        3.55841780e-01,  2.63007307e-01, -2.82982351e-02, -9.85035911e-03,\n",
+       "        3.03184031e-02,  1.41944074e-01,  7.84904002e-02,  5.12396955e-01,\n",
+       "        2.04383039e-01,  3.11347151e-01,  5.27411604e-01,  4.61936140e-01,\n",
+       "        5.36719798e-02,  8.16565657e-01,  5.34430647e-01, -1.38604021e-01,\n",
+       "        5.09619856e-01,  1.93396711e-01,  4.55527449e-01,  1.85179853e-01,\n",
+       "        2.21930647e-01,  1.15348005e-01,  6.34833811e-02,  7.30430125e-02,\n",
+       "        1.02332258e-01,  5.53046369e-01,  7.03833723e-01,  5.22650862e-01,\n",
+       "        5.34369612e-01,  3.15772532e-02,  1.11624861e-01, -1.18248797e-01,\n",
+       "        5.31958723e-01, -1.74828386e-01,  4.55207014e-01,  9.74280500e-01,\n",
+       "        4.18219709e-01, -1.16051531e-01,  8.71024275e-01,  1.61688948e-01,\n",
+       "        6.12860823e-01,  3.17069197e-01, -7.87895681e-02,  4.93720198e-01,\n",
+       "        7.44513655e-01,  6.03400706e-02,  6.02637766e-02,  2.37067366e-01,\n",
+       "        5.78742170e-01,  1.11830854e-01,  3.82193708e-01,  6.02362776e-01,\n",
+       "        5.80512522e-02,  2.21930647e-01,  3.88892317e-01,  6.63733625e-01,\n",
+       "        1.56684065e-01,  3.96338606e-01,  5.79772138e-01,  5.03119612e-01,\n",
+       "        1.06299543e-01,  1.49909162e-01,  2.33405256e-01, -3.99098411e-03,\n",
+       "       -2.87102224e-02,  2.65494490e-01,  2.59711408e-01, -6.16997243e-02,\n",
+       "        1.46430158e-01,  8.24072981e-01,  5.68366194e-01, -9.48112966e-02,\n",
+       "       -1.02578020e-01,  8.45023631e-02,  1.61566877e-01, -7.89421560e-02,\n",
+       "        9.44228315e-01,  7.88184641e-02,  3.38202619e-01,  1.57630110e-01,\n",
+       "       -6.89323904e-02,  2.15399885e-01,  4.78644514e-01,  2.20405100e-02,\n",
+       "        5.34857893e-01,  1.42005110e-01, -1.57677508e-01,  9.36045632e-03,\n",
+       "        2.26004743e-01,  3.34235334e-01,  6.07367991e-02, -2.08366872e-02,\n",
+       "       -1.07872820e-01,  3.35242414e-01,  5.09528303e-01,  3.45221662e-01,\n",
+       "       -8.63274099e-02, -4.97978689e-02,  5.05438948e-01,  8.17328928e-02,\n",
+       "        6.74506663e-02,  3.23355818e-01,  3.37836408e-01,  5.37177229e-01,\n",
+       "        2.91144514e-01,  3.30626631e-01, -4.14818288e-02,  8.27948713e-01,\n",
+       "        6.03675032e-01,  2.35846662e-01,  7.02002668e-01,  4.45197248e-01,\n",
+       "        5.81153059e-01,  1.90161848e-01,  5.42975901e-02,  9.40009593e-02,\n",
+       "       -6.78032400e-02,  1.05841780e-01, -2.53532888e-02, -2.97173025e-02,\n",
+       "        6.52228831e-02,  9.63889597e-02,  1.03583479e-01,  1.77497053e-01,\n",
+       "        1.02515364e-01,  6.63993025e-01,  1.97363996e-01,  1.04499006e-01,\n",
+       "        1.13509321e-01, -3.25859548e-02,  1.45850324e-01,  4.65338850e-01,\n",
+       "        7.55927229e-01,  2.04787397e-01,  4.90332746e-01, -1.01525164e-01,\n",
+       "        6.61872053e-01,  7.53394270e-01,  9.00550032e-01,  7.72544050e-01,\n",
+       "        2.73718977e-01,  2.98316145e-01,  1.87277937e-01,  7.18451643e-01,\n",
+       "        2.29895735e-01,  3.34693098e-01,  8.51996565e-01,  3.11957835e-02,\n",
+       "       -3.28907981e-03, -7.86674978e-02,  7.49915266e-01,  2.04871321e-01,\n",
+       "        4.06424665e-01,  3.32144880e-01,  1.81693220e-01,  8.22791242e-01,\n",
+       "        5.02448225e-01,  6.32910871e-01, -5.04845144e-02,  4.24872874e-02,\n",
+       "        1.11090803e-01,  1.88605451e-01,  6.00897932e-01,  4.09339094e-01,\n",
+       "        6.87232160e-01,  2.89527082e-01, -9.25224782e-02,  4.45319651e-02,\n",
+       "        1.98004866e-01,  6.18827009e-01,  1.41303205e-01,  6.99538374e-01,\n",
+       "        3.10980940e-01,  1.25952864e-01,  8.11988020e-01,  6.28425120e-02,\n",
+       "       -1.05065203e-01,  6.49482249e-02,  1.23908186e-01,  5.19049787e-01,\n",
+       "       -5.95024587e-02,  6.40021467e-01, -1.31462575e-02,  3.79401682e-02,\n",
+       "       -1.05263567e-01,  1.96387434e-01,  3.35837507e-01,  4.88623762e-01,\n",
+       "        1.94281721e-01,  7.93952131e-01,  1.69440412e-01,  8.56086253e-02,\n",
+       "        1.68463850e-01,  1.73621321e-01,  3.23096751e-02,  4.69336653e-01,\n",
+       "        2.02185774e-01,  8.45404768e-01,  4.20447492e-01,  2.17658186e-01,\n",
+       "        1.80792951e-01,  1.54532575e-01,  7.26195478e-01,  4.44556379e-01,\n",
+       "        4.87067366e-01,  1.01081037e-01,  4.13039350e-01, -1.13549090e-01,\n",
+       "        1.78046369e-01, -1.00334646e-02,  1.38617658e-01,  1.12250471e-01,\n",
+       "        6.09320783e-01,  2.13538645e-02,  1.88208723e-01, -1.35369158e-01,\n",
+       "        7.06488752e-01,  4.32578230e-01, -5.83427907e-02,  9.27703047e-01,\n",
+       "        5.39801741e-01, -1.36647239e-03,  9.17761946e-01, -2.17827322e-02,\n",
+       "        1.65213728e-01,  1.77130842e-01,  4.73487043e-01, -2.92286887e-03,\n",
+       "        4.00656843e-01,  1.41517161e-02,  1.96082258e-01, -6.79863454e-02,\n",
+       "        5.86737776e-01,  1.92023420e-01,  2.33161116e-01,  2.73291731e-01,\n",
+       "        9.40802717e-01,  7.10227156e-01,  1.34253645e-01,  7.38288401e-02,\n",
+       "        5.50605296e-02, -2.26525164e-01,  4.09919260e-02,  5.10322093e-02,\n",
+       "        3.04633616e-02,  2.94425154e-01,  9.69397688e-01,  7.97736311e-01,\n",
+       "       -2.32475759e-02,  5.25580882e-02,  2.64914656e-01,  1.74254560e-01,\n",
+       "        7.06153059e-01,  1.73804426e-01,  3.44245100e-01])"
+      ]
+     },
+     "execution_count": 20,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "predictions = LinearReg.predict(x_test)\n",
+    "predictions"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "#### Q4) Using the `predictions` and the `y_test` dataframe calculate the value for each metric using the appropriate function.\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 24,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "\n",
+    "from sklearn.metrics import mean_absolute_error\n",
+    "from sklearn.metrics import r2_score\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 40,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Mean Absolute Error : 0.256298 \n",
+      "Mean Squared Error : 0.115724 \n",
+      "R2 Score : 0.427113 \n"
+     ]
+    }
+   ],
+   "source": [
+    "LinearRegression_MAE = mean_absolute_error(y_test, predictions)\n",
+    "LinearRegression_MSE = np.mean((predictions - y_test)**2)\n",
+    "LinearRegression_R2 = r2_score(y_test, predictions)\n",
+    "print('Mean Absolute Error : %2f '% LinearRegression_MAE)\n",
+    "print('Mean Squared Error : %2f '% LinearRegression_MSE)\n",
+    "print('R2 Score : %2f '% LinearRegression_R2)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "#### Q5) Show the MAE, MSE, and R2 in a tabular format using data frame for the linear model.\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 42,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>Metric</th>\n",
+       "      <th>Linear Regression</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>MAE</td>\n",
+       "      <td>0.256298</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>MSE</td>\n",
+       "      <td>0.115724</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>R2</td>\n",
+       "      <td>0.427113</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "  Metric  Linear Regression\n",
+       "0    MAE           0.256298\n",
+       "1    MSE           0.115724\n",
+       "2     R2           0.427113"
+      ]
+     },
+     "execution_count": 42,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "reports = pd.DataFrame({'Metric': ['MAE', 'MSE', 'R2'],\n",
+    "                           'Linear Regression': [LinearRegression_MAE, LinearRegression_MSE, LinearRegression_R2]})\n",
+    "reports"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### KNN\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "#### Q6) Create and train a KNN model called KNN using the training data (`x_train`, `y_train`) with the `n_neighbors` parameter set to `4`.\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 43,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "\n",
+    "K = 4"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 44,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "KNN = KNeighborsClassifier(n_neighbors = K).fit(x_train, y_train)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "#### Q7) Now use the `predict` method on the testing data (`x_test`) and save it to the array `predictions`.\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 46,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "array([0., 1., 1., 1., 0., 0., 0., 1., 1., 0., 0., 0., 0., 0., 0., 0., 0.,\n",
+       "       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,\n",
+       "       0., 1., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0.,\n",
+       "       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0.,\n",
+       "       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0.,\n",
+       "       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,\n",
+       "       1., 0., 0., 0., 0., 1., 0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0.,\n",
+       "       0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 1., 0., 0., 0., 0., 0.,\n",
+       "       0., 0., 0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,\n",
+       "       0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0.,\n",
+       "       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0.,\n",
+       "       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0.,\n",
+       "       1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,\n",
+       "       0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 1.,\n",
+       "       1., 0., 1., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0.,\n",
+       "       1., 0., 0., 1., 1., 0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0.,\n",
+       "       0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,\n",
+       "       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,\n",
+       "       1., 0., 0., 0., 1., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0., 1.,\n",
+       "       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,\n",
+       "       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,\n",
+       "       0., 0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,\n",
+       "       0., 0., 1., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0., 0., 0.,\n",
+       "       0., 0., 0., 0., 0., 1., 0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0.,\n",
+       "       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,\n",
+       "       0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 1., 0., 0., 1., 0., 1., 0.,\n",
+       "       0., 0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,\n",
+       "       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0., 0.,\n",
+       "       1., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,\n",
+       "       1., 1., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0., 0., 0.,\n",
+       "       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,\n",
+       "       0., 0., 0., 1., 0., 1., 0., 0., 0., 1., 0., 1., 1., 0., 0., 0., 1.,\n",
+       "       0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0.,\n",
+       "       0., 1., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0.,\n",
+       "       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0.,\n",
+       "       1., 0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 1., 0.,\n",
+       "       0., 0., 0., 0., 1., 0., 0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 1.,\n",
+       "       0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0.,\n",
+       "       1., 0., 0., 0., 0., 0., 1., 0., 0.])"
+      ]
+     },
+     "execution_count": 46,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "predictions = KNN.predict(x_test)\n",
+    "predictions"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "#### Q8) Using the `predictions` and the `y_test` dataframe calculate the value for each metric using the appropriate function.\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 49,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "\n",
+    "from sklearn.metrics import accuracy_score\n",
+    "from sklearn.metrics import jaccard_score\n",
+    "from sklearn.metrics import f1_score"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 56,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>Metric</th>\n",
+       "      <th>Linear Regression</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>Accuracy</td>\n",
+       "      <td>0.760305</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>Jaccard Index</td>\n",
+       "      <td>0.241546</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>F1 score</td>\n",
+       "      <td>0.389105</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "          Metric  Linear Regression\n",
+       "0       Accuracy           0.760305\n",
+       "1  Jaccard Index           0.241546\n",
+       "2       F1 score           0.389105"
+      ]
+     },
+     "execution_count": 56,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "KNN_Accuracy_Score = accuracy_score(y_test, predictions)\n",
+    "KNN_JaccardIndex = jaccard_score(y_test, predictions)\n",
+    "KNN_F1_Score = f1_score(y_test, predictions)\n",
+    "report = pd.DataFrame({'Metric': ['Accuracy', 'Jaccard Index', 'F1 score'],\n",
+    "                           'Linear Regression': [KNN_Accuracy_Score, KNN_JaccardIndex, KNN_F1_Score]})\n",
+    "report"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Decision Tree\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "#### Q9) Create and train a Decision Tree model called Tree using the training data (`x_train`, `y_train`).\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 58,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "DecisionTreeClassifier(criterion='entropy', max_depth=4)"
+      ]
+     },
+     "execution_count": 58,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "Tree = DecisionTreeClassifier(criterion = 'entropy', max_depth = 4)\n",
+    "Tree.fit(x_train, y_train)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "#### Q10) Now use the `predict` method on the testing data (`x_test`) and save it to the array `predictions`.\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 60,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "array([0., 0., 1., 0., 0., 0., 0., 1., 1., 0., 0., 0., 0., 0., 0., 0., 0.,\n",
+       "       1., 0., 0., 0., 1., 0., 0., 0., 1., 1., 0., 1., 0., 1., 0., 0., 0.,\n",
+       "       0., 1., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0., 1., 1., 0., 0.,\n",
+       "       0., 0., 0., 0., 0., 0., 1., 1., 0., 0., 0., 1., 1., 0., 0., 1., 0.,\n",
+       "       0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 1., 0., 0., 0., 0., 0.,\n",
+       "       0., 0., 1., 0., 0., 0., 0., 0., 0., 0., 1., 0., 1., 0., 0., 0., 0.,\n",
+       "       1., 0., 1., 1., 0., 1., 0., 1., 1., 0., 0., 0., 0., 0., 0., 0., 0.,\n",
+       "       0., 0., 0., 0., 0., 1., 0., 0., 1., 0., 1., 0., 0., 0., 0., 0., 0.,\n",
+       "       0., 0., 0., 1., 0., 0., 0., 0., 1., 0., 0., 0., 0., 1., 0., 0., 0.,\n",
+       "       0., 0., 0., 0., 1., 0., 1., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0.,\n",
+       "       1., 0., 1., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 1., 0., 0., 0.,\n",
+       "       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0.,\n",
+       "       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 1.,\n",
+       "       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 1., 1., 1., 0., 0., 1.,\n",
+       "       1., 0., 1., 1., 1., 1., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0., 0.,\n",
+       "       1., 0., 1., 1., 1., 0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0.,\n",
+       "       0., 1., 0., 0., 1., 0., 0., 0., 0., 0., 1., 0., 1., 0., 0., 0., 0.,\n",
+       "       0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 1., 0., 0., 1., 0., 0.,\n",
+       "       1., 0., 1., 0., 1., 1., 1., 0., 1., 1., 1., 1., 0., 0., 0., 0., 1.,\n",
+       "       0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0.,\n",
+       "       0., 0., 0., 0., 1., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0.,\n",
+       "       0., 1., 1., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0., 0., 1., 0.,\n",
+       "       1., 1., 0., 0., 0., 0., 0., 1., 0., 1., 1., 0., 0., 1., 0., 0., 0.,\n",
+       "       0., 1., 0., 0., 0., 0., 0., 1., 1., 1., 0., 0., 0., 0., 0., 0., 1.,\n",
+       "       0., 0., 1., 1., 0., 1., 0., 0., 1., 0., 0., 0., 0., 0., 0., 0., 0.,\n",
+       "       1., 1., 0., 1., 0., 0., 0., 0., 0., 0., 1., 0., 0., 1., 0., 1., 0.,\n",
+       "       0., 1., 1., 0., 0., 0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 1., 1.,\n",
+       "       0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 1., 0., 0., 0., 0., 0., 0.,\n",
+       "       1., 0., 1., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0., 0., 0., 0.,\n",
+       "       0., 1., 0., 0., 0., 1., 0., 0., 0., 0., 1., 0., 0., 0., 1., 1., 0.,\n",
+       "       1., 0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,\n",
+       "       0., 0., 0., 0., 1., 1., 0., 0., 0., 1., 1., 1., 1., 0., 0., 0., 1.,\n",
+       "       0., 0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 1., 0., 0., 0.,\n",
+       "       0., 1., 1., 1., 0., 0., 0., 0., 1., 0., 1., 0., 0., 1., 0., 0., 0.,\n",
+       "       0., 0., 0., 1., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0.,\n",
+       "       1., 0., 1., 0., 0., 0., 0., 1., 1., 0., 0., 0., 0., 0., 0., 0., 0.,\n",
+       "       1., 0., 0., 0., 1., 0., 0., 1., 1., 0., 1., 0., 0., 0., 0., 0., 0.,\n",
+       "       0., 0., 0., 1., 0., 0., 0., 1., 1., 0., 0., 0., 0., 0., 0., 0., 0.,\n",
+       "       1., 1., 0., 0., 0., 0., 1., 0., 0.])"
+      ]
+     },
+     "execution_count": 60,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "predictions = Tree.predict(x_test)\n",
+    "predictions"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "#### Q11) Using the `predictions` and the `y_test` dataframe calculate the value for each metric using the appropriate function.\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 61,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>Metric</th>\n",
+       "      <th>Linear Regression</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>Accuracy</td>\n",
+       "      <td>0.818321</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>Jaccard Index</td>\n",
+       "      <td>0.480349</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>F1 score</td>\n",
+       "      <td>0.648968</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "          Metric  Linear Regression\n",
+       "0       Accuracy           0.818321\n",
+       "1  Jaccard Index           0.480349\n",
+       "2       F1 score           0.648968"
+      ]
+     },
+     "execution_count": 61,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "Tree_Accuracy_Score = accuracy_score(y_test, predictions)\n",
+    "Tree_JaccardIndex = jaccard_score(y_test, predictions)\n",
+    "Tree_F1_Score = f1_score(y_test, predictions)\n",
+    "reports = pd.DataFrame({'Metric': ['Accuracy', 'Jaccard Index', 'F1 score'],\n",
+    "                           'Linear Regression': [Tree_Accuracy_Score, Tree_JaccardIndex, Tree_F1_Score]})\n",
+    "reports\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Logistic Regression\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "#### Q12) Use the `train_test_split` function to split the `features` and `Y` dataframes with a `test_size` of `0.2` and the `random_state` set to `1`.\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "x_train, x_test, y_train, y_test = train_test_split(X,Y,test_size=0.2, random_state=1)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "#### Q13) Create and train a LogisticRegression model called LR using the training data (`x_train`, `y_train`) with the `solver` parameter set to `liblinear`.\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 63,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "LogisticRegression()"
+      ]
+     },
+     "execution_count": 63,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "LR = LogisticRegression()\n",
+    "LR.fit(x_train, y_train)\n",
+    "    "
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "#### Q14) Now, use the `predict` method on the testing data (`x_test`) and save it to the array `predictions`.\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 65,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "array([0., 0., 1., 0., 0., 0., 0., 1., 1., 0., 0., 0., 0., 0., 0., 1., 0.,\n",
+       "       1., 0., 0., 0., 1., 0., 0., 0., 0., 1., 0., 1., 0., 0., 0., 0., 0.,\n",
+       "       1., 1., 0., 1., 0., 0., 0., 1., 0., 0., 0., 0., 0., 0., 1., 0., 0.,\n",
+       "       0., 0., 0., 0., 0., 0., 1., 1., 1., 0., 0., 1., 1., 0., 0., 0., 0.,\n",
+       "       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 1.,\n",
+       "       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 1., 0., 0., 0., 0.,\n",
+       "       1., 0., 1., 1., 0., 1., 0., 1., 1., 0., 0., 0., 0., 0., 1., 0., 0.,\n",
+       "       0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 1., 0., 0., 0., 0., 0., 0.,\n",
+       "       0., 0., 0., 1., 0., 0., 0., 0., 1., 0., 0., 1., 0., 1., 0., 0., 0.,\n",
+       "       0., 0., 0., 0., 1., 0., 1., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0.,\n",
+       "       1., 0., 1., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 1., 0., 0., 0.,\n",
+       "       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0.,\n",
+       "       1., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0., 1., 0., 1.,\n",
+       "       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 1.,\n",
+       "       1., 0., 1., 1., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,\n",
+       "       1., 0., 1., 1., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,\n",
+       "       0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 1., 0., 0., 0., 0.,\n",
+       "       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 1., 0., 0.,\n",
+       "       1., 0., 1., 0., 1., 1., 1., 0., 1., 1., 0., 1., 0., 0., 0., 0., 1.,\n",
+       "       0., 0., 0., 0., 0., 0., 0., 1., 1., 0., 0., 0., 0., 0., 0., 0., 0.,\n",
+       "       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 1.,\n",
+       "       0., 0., 1., 0., 0., 0., 0., 0., 1., 0., 0., 1., 0., 0., 0., 1., 0.,\n",
+       "       1., 1., 0., 0., 0., 0., 0., 1., 0., 1., 0., 0., 0., 1., 0., 0., 0.,\n",
+       "       0., 0., 0., 0., 0., 0., 0., 1., 1., 0., 0., 0., 0., 0., 0., 0., 0.,\n",
+       "       0., 0., 1., 1., 0., 1., 1., 0., 0., 0., 1., 0., 0., 0., 0., 0., 0.,\n",
+       "       1., 1., 1., 1., 0., 0., 0., 1., 0., 0., 1., 0., 0., 1., 0., 1., 0.,\n",
+       "       0., 1., 1., 0., 0., 0., 1., 0., 0., 1., 0., 0., 0., 1., 0., 0., 1.,\n",
+       "       1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 1., 1., 0., 0., 0., 0., 0.,\n",
+       "       1., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0., 0., 0., 0.,\n",
+       "       0., 1., 0., 0., 0., 1., 0., 0., 0., 0., 1., 0., 0., 0., 1., 1., 0.,\n",
+       "       1., 1., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 1., 0.,\n",
+       "       0., 0., 0., 0., 0., 1., 0., 1., 0., 1., 1., 1., 1., 0., 0., 0., 1.,\n",
+       "       0., 0., 1., 0., 0., 0., 1., 0., 0., 0., 0., 1., 1., 1., 0., 0., 0.,\n",
+       "       0., 1., 0., 1., 0., 0., 0., 0., 1., 0., 1., 0., 0., 1., 0., 0., 0.,\n",
+       "       0., 1., 0., 1., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0.,\n",
+       "       0., 0., 1., 0., 0., 0., 0., 1., 0., 1., 0., 0., 0., 0., 0., 0., 0.,\n",
+       "       1., 0., 0., 0., 1., 0., 0., 1., 1., 0., 1., 0., 0., 0., 1., 0., 0.,\n",
+       "       0., 0., 0., 1., 0., 0., 0., 1., 1., 0., 0., 0., 0., 0., 0., 0., 0.,\n",
+       "       1., 1., 0., 0., 0., 0., 1., 0., 0.])"
+      ]
+     },
+     "execution_count": 65,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "predictions = LR.predict(x_test)\n",
+    "predictions"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "#### Q15) Using the `predictions` and the `y_test` dataframe calculate the value for each metric using the appropriate function.\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 66,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "\n",
+    "from sklearn.metrics import log_loss"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 67,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>Metric</th>\n",
+       "      <th>Linear Regression</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>Accuracy</td>\n",
+       "      <td>0.838168</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>Jaccard Index</td>\n",
+       "      <td>0.522523</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>F1 score</td>\n",
+       "      <td>0.686391</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>Log Loss</td>\n",
+       "      <td>5.589528</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "          Metric  Linear Regression\n",
+       "0       Accuracy           0.838168\n",
+       "1  Jaccard Index           0.522523\n",
+       "2       F1 score           0.686391\n",
+       "3       Log Loss           5.589528"
+      ]
+     },
+     "execution_count": 67,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "LR_Accuracy_Score = accuracy_score(y_test, predictions)\n",
+    "LR_JaccardIndex = jaccard_score(y_test, predictions)\n",
+    "LR_F1_Score = f1_score(y_test, predictions)\n",
+    "LR_Log_Loss = log_loss(y_test, predictions)\n",
+    "reports = pd.DataFrame({'Metric': ['Accuracy', 'Jaccard Index', 'F1 score', 'Log Loss'],\n",
+    "                           'Linear Regression': [LR_Accuracy_Score, LR_JaccardIndex, LR_F1_Score, LR_Log_Loss]})\n",
+    "\n",
+    "reports"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### SVM\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "#### Q16) Create and train a SVM model called SVM using the training data (`x_train`, `y_train`).\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 69,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "SVC()"
+      ]
+     },
+     "execution_count": 69,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "SVM = svm.SVC(kernel ='rbf')\n",
+    "SVM.fit(x_train, y_train)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "#### Q17) Now use the `predict` method on the testing data (`x_test`) and save it to the array `predictions`.\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 70,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "array([0., 0., 1., 0., 0., 0., 0., 1., 1., 0., 0., 0., 0., 0., 0., 0., 0.,\n",
+       "       1., 0., 0., 0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,\n",
+       "       0., 1., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0., 0., 1., 0., 0.,\n",
+       "       0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0.,\n",
+       "       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 1.,\n",
+       "       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 1., 0., 0., 0., 0.,\n",
+       "       1., 0., 1., 1., 0., 1., 0., 1., 0., 0., 0., 0., 0., 0., 1., 0., 0.,\n",
+       "       0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 1., 1., 0., 0., 0., 0., 0.,\n",
+       "       0., 0., 0., 1., 0., 0., 0., 0., 1., 0., 0., 1., 0., 0., 0., 0., 0.,\n",
+       "       0., 0., 0., 0., 1., 0., 1., 1., 0., 0., 0., 0., 0., 0., 0., 1., 0.,\n",
+       "       1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0.,\n",
+       "       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0.,\n",
+       "       1., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0., 1., 0., 1.,\n",
+       "       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 1.,\n",
+       "       1., 0., 1., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,\n",
+       "       1., 0., 1., 1., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,\n",
+       "       0., 1., 0., 0., 1., 0., 0., 0., 0., 0., 1., 0., 1., 0., 0., 0., 0.,\n",
+       "       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 1., 0., 0.,\n",
+       "       1., 0., 1., 0., 1., 1., 0., 0., 1., 1., 1., 0., 0., 0., 0., 0., 1.,\n",
+       "       0., 0., 0., 0., 0., 0., 0., 1., 1., 0., 0., 0., 0., 0., 0., 0., 0.,\n",
+       "       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 1.,\n",
+       "       0., 0., 1., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 1., 0.,\n",
+       "       1., 1., 1., 0., 0., 0., 0., 1., 0., 1., 0., 0., 0., 0., 0., 0., 0.,\n",
+       "       0., 0., 0., 0., 0., 0., 0., 1., 1., 0., 0., 0., 0., 0., 0., 0., 0.,\n",
+       "       0., 0., 0., 0., 0., 1., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,\n",
+       "       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 1., 0., 1., 0.,\n",
+       "       0., 0., 1., 0., 0., 0., 1., 0., 0., 1., 0., 0., 0., 1., 0., 0., 1.,\n",
+       "       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0., 0.,\n",
+       "       1., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,\n",
+       "       0., 1., 0., 0., 0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 1., 1., 0.,\n",
+       "       1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 1., 0.,\n",
+       "       0., 0., 0., 0., 0., 1., 0., 0., 0., 1., 1., 1., 1., 0., 0., 0., 1.,\n",
+       "       0., 0., 1., 0., 0., 0., 1., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0.,\n",
+       "       0., 1., 0., 1., 0., 0., 0., 0., 0., 0., 1., 0., 0., 1., 0., 0., 0.,\n",
+       "       0., 0., 0., 1., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0.,\n",
+       "       0., 0., 1., 1., 0., 0., 0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0.,\n",
+       "       1., 0., 0., 0., 1., 0., 0., 1., 0., 0., 1., 0., 0., 0., 0., 0., 0.,\n",
+       "       0., 0., 0., 1., 0., 0., 0., 1., 1., 0., 0., 0., 0., 0., 0., 0., 0.,\n",
+       "       1., 1., 0., 0., 0., 0., 1., 0., 0.])"
+      ]
+     },
+     "execution_count": 70,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "predictions = SVM.predict(x_test)\n",
+    "predictions"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "#### Q18) Using the `predictions` and the `y_test` dataframe calculate the value for each metric using the appropriate function.\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 72,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "SVM_Accuracy_Score = accuracy_score(y_test, predictions)\n",
+    "SVM_JaccardIndex = jaccard_score(y_test, predictions)\n",
+    "SVM_F1_Score = f1_score(y_test, predictions)\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Report\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "#### Q19) Show the Accuracy,Jaccard Index,F1-Score and LogLoss in a tabular format using data frame for all of the above models.\n",
+    "\n",
+    "\\*LogLoss is only for Logistic Regression Model\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 73,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 74,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>Metric</th>\n",
+       "      <th>Linear Regression</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>Accuracy</td>\n",
+       "      <td>0.833588</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>Jaccard Index</td>\n",
+       "      <td>0.473430</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>F1 score</td>\n",
+       "      <td>0.642623</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "          Metric  Linear Regression\n",
+       "0       Accuracy           0.833588\n",
+       "1  Jaccard Index           0.473430\n",
+       "2       F1 score           0.642623"
+      ]
+     },
+     "execution_count": 74,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "Report = pd.DataFrame({'Metric': ['Accuracy', 'Jaccard Index', 'F1 score'],\n",
+    "                           'Linear Regression': [SVM_Accuracy_Score, SVM_JaccardIndex, SVM_F1_Score]})\n",
+    "Report"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.9.12"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 4
+}
